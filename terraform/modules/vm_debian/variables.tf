@@ -37,6 +37,13 @@ variable "cores" {
   default     = 2
 }
 
+variable "type" {
+  description = "VM type (e.g., qemu)"
+  type        = string
+  default     = "host"
+  
+}
+
 variable "memory" {
   description = "RAM allocation in MB"
   type        = number
@@ -64,6 +71,11 @@ variable "datastore_id" {
   type        = string
 }
 
+variable "disk_file_format" {
+  description = "Disk file format (e.g., raw, qcow2)"
+  type        = string
+  default     = "qcow2"
+}
 # ------------------------------------------------------------------------------
 # Network Configuration
 # ------------------------------------------------------------------------------

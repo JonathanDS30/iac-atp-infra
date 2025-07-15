@@ -25,6 +25,7 @@ resource "proxmox_virtual_environment_vm" "vm_debian" {
   # ------------------------------------------------------------------------------
   cpu {
     cores = var.cores
+    type  = var.type
   }
 
   memory {
@@ -39,7 +40,7 @@ resource "proxmox_virtual_environment_vm" "vm_debian" {
     size         = var.disk_size
     interface    = var.disk_interface
     discard      = "on"
-    file_format  = "raw"
+    file_format  = var.disk_file_format
   }
 
   # ------------------------------------------------------------------------------
