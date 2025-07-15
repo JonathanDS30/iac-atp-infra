@@ -60,6 +60,7 @@ resource "proxmox_virtual_environment_vm" "vm_debian" {
     user_account {
       username = var.username
       password = var.password
+      keys = var.keys
     }
 
     # Network configuration

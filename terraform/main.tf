@@ -11,4 +11,5 @@ module "vm_debian1" {
 
   username = "user-jd"
   password = "test"
+  keys = [file("~/.ssh/id_rsa.pub")]
 }

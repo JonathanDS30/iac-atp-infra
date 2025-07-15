@@ -129,3 +129,9 @@ variable "password" {
   type        = string
   default     = "user"
 }
+
+variable "keys" {
+  description = "List of SSH public keys for user authentication"
+  type        = list(string)
+  default     = []
+}
