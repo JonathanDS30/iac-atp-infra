@@ -121,11 +121,11 @@ variable "gateway" {
 variable "username" {
   description = "Default username for the VM"
   type        = string
-  default     = "user"
+  default     = "Administrateur"
 }
 
 variable "password" {
   description = "Default password for the VM"
   type        = string
-  default     = "user"
+  default     = "password"
 }

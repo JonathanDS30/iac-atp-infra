@@ -81,7 +81,7 @@ resource "proxmox_virtual_environment_vm" "vm_debian" {
 
   # Set operating system type for optimal performance
   operating_system {
-    type = "windows"
+    type = "win11"
   }
 
   # Boot configuration
