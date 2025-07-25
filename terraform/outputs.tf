@@ -19,14 +19,27 @@
 # }
 
 
-output "vm_windows_server_vm_id" {
-  value = module.vm_windows_server.vm_id
+# output "vm_windows_server_vm_id" {
+#   value = module.vm_windows_server.vm_id
+# }
+
+# output "vm_windows_server_ip" {
+#   value = module.vm_windows_server.ip
+# }
+
+# output "vm_windows_server_name" {
+#   value = module.vm_windows_server.name
+# }
+
+
+output "debian_container_id" {
+  value = module.debian_container.vm_id
 }
 
-output "vm_windows_server_ip" {
-  value = module.vm_windows_server.ip
+output "debian_container_ip" {
+  value = module.debian_container.ip
 }
 
-output "vm_windows_server_name" {
-  value = module.vm_windows_server.name
+output "debian_container_name" {
+  value = module.debian_container.name
 }
