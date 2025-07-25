@@ -27,6 +27,18 @@ variable "on_boot" {
   default     = true
 }
 
+variable "description" {
+  description = "Description of the virtual machine"
+  type        = string
+  default     = "Windows Server VM provisioned with Terraform"
+}
+
+variable "tags" {
+  description = "Tags for the virtual machine"
+  type        = list(string)
+  default     = [" "]
+}
+
 # ------------------------------------------------------------------------------
 # Hardware Resources
 # ------------------------------------------------------------------------------
@@ -106,7 +118,7 @@ variable "ip_address" {
 variable "netmask" {
   description = "Network mask (CIDR notation)"
   type        = number
-  default     = 16
+  default     = 24
 }
 
 variable "gateway" {
@@ -128,4 +140,19 @@ variable "password" {
   description = "Default password for the VM"
   type        = string
   default     = "password"
+
+  validation {
+    condition     = length(var.password) >= 7
+    error_message = "The password must be at least 7 characters long."
+  }
+
+  validation {
+    condition = (
+      (can(regex("[0-9]", var.password)) ? 1 : 0) +
+      (can(regex("[a-z]", var.password)) ? 1 : 0) +
+      (can(regex("[A-Z]", var.password)) ? 1 : 0) +
+      (can(regex("[^a-zA-Z0-9]", var.password)) ? 1 : 0)
+    ) >= 3
+    error_message = "The password must contain at least 3 of the following 4 character types: digits (0-9), lowercase letters (a-z), uppercase letters (A-Z), special characters (!@#$%^&*()_+-=[]{}|;:,.<>?)."
+  }
 }

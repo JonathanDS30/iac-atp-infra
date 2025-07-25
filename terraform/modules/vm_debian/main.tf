@@ -10,7 +10,8 @@ resource "proxmox_virtual_environment_vm" "vm_debian" {
   # ------------------------------------------------------------------------------
   name        = var.vm_name
   node_name   = var.node_name
-  description = "Debian VM provisioned with Terraform"
+  description = var.description
+  tags        = var.tags
 
   # ------------------------------------------------------------------------------
   # Template Cloning

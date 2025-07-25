@@ -67,3 +67,5 @@ crash.log
 !template-debian-12.pkrvars.hcl 
 # For built boxes
 *.box
+
+.venv

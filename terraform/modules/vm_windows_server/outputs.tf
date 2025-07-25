@@ -6,7 +6,7 @@
 
 output "vm_id" {
   description = "The ID of the created virtual machine"
-  value       = proxmox_virtual_environment_vm.vm_debian.id
+  value       = proxmox_virtual_environment_vm.vm_windows_server.id
 }
 
 output "ip" {

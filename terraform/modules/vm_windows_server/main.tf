@@ -4,13 +4,14 @@
 # This module creates a Debian virtual machine on Proxmox VE
 # using template cloning and cloud-init initialization.
 
-resource "proxmox_virtual_environment_vm" "vm_debian" {
+resource "proxmox_virtual_environment_vm" "vm_windows_server" {
   # ------------------------------------------------------------------------------
   # Basic VM Configuration
   # ------------------------------------------------------------------------------
   name        = var.vm_name
   node_name   = var.node_name
-  description = "Debian VM provisioned with Terraform"
+  description = var.description
+  tags = var.tags
 
   # ------------------------------------------------------------------------------
   # Template Cloning

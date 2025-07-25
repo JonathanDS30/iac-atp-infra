@@ -27,6 +27,18 @@ variable "on_boot" {
   default     = true
 }
 
+variable "description" {
+  description = "Description of the virtual machine"
+  type        = string
+  default     = "Debian VM provisioned with Terraform"
+}
+
+variable "tags" {
+  description = "Tags for the virtual machine"
+  type        = list(string)
+  default     = [" "]
+}
+
 # ------------------------------------------------------------------------------
 # Hardware Resources
 # ------------------------------------------------------------------------------
@@ -106,7 +118,7 @@ variable "ip_address" {
 variable "netmask" {
   description = "Network mask (CIDR notation)"
   type        = number
-  default     = 16
+  default     = 24
 }
 
 variable "gateway" {

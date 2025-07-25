@@ -70,6 +70,8 @@ module "debian_vm" {
 | node_name | Proxmox node name | `string` | n/a | yes |
 | template_id | Template ID to clone from | `number` | n/a | yes |
 | datastore_id | Storage pool name (e.g., local-lvm) | `string` | n/a | yes |
+| description | Description of the virtual machine | `string` | `"Debian VM provisioned with Terraform"` | no |
+| tags | Tags for the virtual machine | `list(string)` | n/a | no |
 | ip_address | Static IP address | `string` | n/a | yes |
 | gateway | Default gateway IP address | `string` | n/a | yes |
 | cores | Number of CPU cores | `number` | `2` | no |
