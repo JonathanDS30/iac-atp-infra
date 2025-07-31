@@ -18,19 +18,31 @@ $SRC = "D:"
 # ----------------------------------------------------------------------------
 # 1.  Software installation
 # ----------------------------------------------------------------------------
-Write-Output "Installing Notepad++ (silent)..."
-Start-Process -FilePath "$SRC\npp.8.8.1.Installer.x64.exe" -ArgumentList "/S" -Wait
+Write-Output "Installing Notepad++..."
+Start-Process -FilePath "$SRC\installers\npp.8.8.1.Installer.x64.exe" -ArgumentList "/S" -Wait
 
 # ----------------------------------------------------------------------------
-# 2.  Network tweaks
+# 2.  Others tweaks
 # ----------------------------------------------------------------------------
+
+# Disable IPv6 on all network adapters
 Write-Output "Disabling IPv6 on all network adapters..."
 Get-NetAdapter | ForEach-Object {
     Disable-NetAdapterBinding -InterfaceAlias $_.Name -ComponentID ms_tcpip6 -Confirm:$false
 }
 
+# Enable Remote Desktop
+Write-Output "Enabling Remote Desktop..."
+Set-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Terminal Server" -Name "fDenyTSConnections" -Value 0
 
-# ---------------------------------------------------------------------------# ----------------------------------------------------------------------------
+    New-NetFirewallRule -DisplayName "RDP-TCP" -Direction Inbound -Protocol TCP -LocalPort 3389 -Action Allow -Enabled True -ErrorAction SilentlyContinue
+    New-NetFirewallRule -DisplayName "RDP-UDP" -Direction Inbound -Protocol UDP -LocalPort 3389 -Action Allow -Enabled True -ErrorAction SilentlyContinue
+
+# Enable In bound ICMPv4 traffic
+Write-Output "Enabling ICMPv4 traffic..."
+New-NetFirewallRule -DisplayName "ICMPv4-In" -Direction Inbound -Protocol ICMPv4 -Action Allow -Enabled True -ErrorAction SilentlyContinue
+
+# ---------------------------------------------------------------------------
 # 3.  Reset autologon counter (known Sysprep issue)
 # ----------------------------------------------------------------------------
 Set-ItemProperty `
@@ -45,16 +57,26 @@ Write-Output "Installing Cloudbase‑Init..."
 
 $cloudbaseBase = 'C:\Program Files\Cloudbase Solutions\Cloudbase-Init'
 $cloudbaseConf = Join-Path $cloudbaseBase 'conf'
+$cloudbaseLocalScripts = Join-Path $cloudbaseBase 'LocalScripts'
+
+# Créer le dossier LocalScripts s'il n'existe pas
+if (-not (Test-Path $cloudbaseLocalScripts)) {
+    New-Item -Path $cloudbaseLocalScripts -ItemType Directory -Force
+}
 
 
-Start-Process -FilePath "$SRC\cloudbase-init\CloudbaseInitSetup_1_1_6_x64.msi" -ArgumentList "/quiet","/norestart","RUN_SERVICE_AS_LOCAL_SYSTEM=1" -Wait
+
+Start-Process -FilePath "$SRC\installers\CloudbaseInitSetup_1_1_6_x64.msi" -ArgumentList "/quiet","/norestart","RUN_SERVICE_AS_LOCAL_SYSTEM=1" -Wait
+
+Start-Sleep -Seconds 30
 
 Copy-Item "$SRC\cloudbase-init\cloudbase-init.conf"           -Destination $cloudbaseConf -Force
 Copy-Item "$SRC\cloudbase-init\cloudbase-init-unattend.conf"  -Destination $cloudbaseConf -Force
 Copy-Item "$SRC\cloudbase-init\Unattend.xml"                  -Destination $cloudbaseConf -Force
+Copy-Item "$SRC\postdeployment-enable-winrm.ps1" -Destination $cloudbaseLocalScripts -Force
 
-# Attendre un peu
-Start-Sleep -Seconds 15
+# Wait a bit for Cloudbase-Init to settle
+Start-Sleep -Seconds 10
 
 $ErrorActionPreference = "Stop"
 
@@ -88,9 +110,5 @@ Start-Sleep -Seconds 5
 # 5.  Sysprep and automatic shutdown
 # ----------------------------------------------------------------------------
 
-Write-Output "=== Running Sysprep and automatic shutdown ==="
-& "$env:SystemRoot\System32\Sysprep\sysprep.exe" `
-    /generalize /oobe /shutdown /quiet `
-    /unattend:"C:\Program Files\Cloudbase Solutions\Cloudbase-Init\conf\Unattend.xml"
-
-
+Write-Output "Launching Sysprep script..."
+& "$SRC\sysprep.ps1"

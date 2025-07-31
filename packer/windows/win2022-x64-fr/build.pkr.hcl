@@ -113,7 +113,7 @@ variable "disk_cache" {
 variable "network_adapter" {
   description = "Bridge to which the network device should be attached."
   type        = string
-  default     = "vmbr0"
+  default     = "vmbr1"
 }
 
 variable "network_adapter_model" {
@@ -455,6 +455,6 @@ build {
   sources = ["source.proxmox-iso.vm"]
 
   provisioner "powershell" {
-    script = "windows-server22/setup.ps1"
+    script = "windows/win2022-x64-fr/provision/scripts/setup.ps1"
   }
 }
