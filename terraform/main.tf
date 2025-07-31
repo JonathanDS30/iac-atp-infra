@@ -27,44 +27,45 @@
 #   autostart_network_interfaces = true
 # }
 
-# # Executing using the Terraform module for creating a Windows Server VM
-# module "vm_windows_server" {
-#   source = "./modules/vm_windows_server"
-#   node_name = "SRV-PMX"
-#   template_id = 9007
-#   vm_name = "WinServer-Test"
-#   memory = 4096
-#   disk_size = 60
-#   datastore_id = "local-lvm"
-#   bridge = "vmbr1"
-#   ip_address = "172.16.0.13"
-#   netmask = 24
-#   gateway = "172.16.0.254"
-#   username = "administrateur"
-#   password = "Thomas300!"
-# }
+# Executing using the Terraform module for creating a Windows Server VM
+module "vm_windows_server" {
+  source = "./modules/vm_windows_server"
+  node_name = "SRV-PMX"
+  template_id = 9112
+  vm_name = "WinServer-Test"
+  memory = 4096
+  disk_size = 80
+  datastore_id = "local-lvm"
+  bridge = "vmbr1"
+  ip_address = "172.16.0.13"
+  netmask = 24
+  gateway = "172.16.0.254"
+  username = "administrateur"
+  password = "Thomas300!"
+}
+
 
 # Executing using the Terraform module for creating a Debian LXC container
-module "debian_container" {
-  source = "./modules/lxc_debian"
-  node_name = "SRV-PMX"
-  template_file_id = "local:vztmpl/debian-12-standard_12.7-1_amd64.tar.zst"
-  hostname = "debian-container"
-  tags = ["container"]
-  description = "Debian LXC Container for testing"
-  cores = 2
-  cpu_units = 1024
-  memory = 512
-  datastore_id = "local-lvm"
-  disk_size = 8
-  network_interface_name = "eth0"
-  bridge = "vmbr1"
-  vlan_id = 0
-  firewall = false
-  network_enabled = true
-  ip_address = "172.16.0.42/24"
-  gateway = "172.16.0.254"
-  password = "test123"
-  ssh_keys = [file("~/.ssh/id_rsa.pub")]
+# module "debian_container" {
+#   source = "./modules/lxc_debian"
+#   node_name = "SRV-PMX"
+#   template_file_id = "local:vztmpl/debian-12-standard_12.7-1_amd64.tar.zst"
+#   hostname = "debian-container"
+#   tags = ["container"]
+#   description = "Debian LXC Container for testing"
+#   cores = 2
+#   cpu_units = 1024
+#   memory = 512
+#   datastore_id = "local-lvm"
+#   disk_size = 8
+#   network_interface_name = "eth0"
+#   bridge = "vmbr1"
+#   vlan_id = 0
+#   firewall = false
+#   network_enabled = true
+#   ip_address = "172.16.0.42/24"
+#   gateway = "172.16.0.254"
+#   password = "test123"
+#   ssh_keys = [file("~/.ssh/id_rsa.pub")]
   
-}
+# }

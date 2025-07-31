@@ -69,3 +69,6 @@ crash.log
 *.box
 
 .venv
+
+CloudbaseInitSetup_1_1_6_x64.msi
+npp.8.8.1.Installer.x64.exe

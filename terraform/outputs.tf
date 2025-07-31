@@ -32,14 +32,14 @@
 # }
 
 
-output "debian_container_id" {
-  value = module.debian_container.vm_id
-}
+# output "debian_container_id" {
+#   value = module.debian_container.vm_id
+# }
 
-output "debian_container_ip" {
-  value = module.debian_container.ip
-}
+# output "debian_container_ip" {
+#   value = module.debian_container.ip
+# }
 
-output "debian_container_name" {
-  value = module.debian_container.name
-}
+# output "debian_container_name" {
+#   value = module.debian_container.name
+# }
