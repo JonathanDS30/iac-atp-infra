@@ -1,9 +1,8 @@
-# config.pkr.hcl
-# This file is used to define the Packer version for building a Debian 12 template on Proxmox.
+# define the Packer version for building template on Proxmox.
 packer {
   required_plugins {
     proxmox = {
-      version = "~> 1"
+      version = "1.2.2"
       source  = "github.com/hashicorp/proxmox"
     }
   }
