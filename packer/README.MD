@@ -9,7 +9,6 @@ This repository contains Packer templates for building virtual machine images on
 - **Automated Provisioning** - Unattended installation and configuration
 - **Cloud-init Ready** - Templates prepared for cloud-init initialization
 - **Customizable Configuration** - Variable-based configuration for flexible deployments
-- **Production Ready** - Optimized templates for enterprise environments
 
 ## Requirements
 
@@ -17,9 +16,10 @@ This repository contains Packer templates for building virtual machine images on
 
 | Component | Version | Notes |
 |-----------|---------|-------|
-| Packer | >= 1.8.0 | HashiCorp Packer for image building |
+| Packer | >= 1.4.0 | HashiCorp Packer for image building |
 | Proxmox VE | >= 7.0 | Target virtualization platform |
 | xorriso | latest | Required for ISO manipulation (Linux: `sudo apt install xorriso`) |
+| VirtIO | 1.2.7.1 | VirtIO Drivers download [here](https://pve.proxmox.com/wiki/Windows_VirtIO_Drivers) and place it in the local storage |
 
 ### Proxmox VE User Configuration
 
