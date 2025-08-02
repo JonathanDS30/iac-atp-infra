@@ -9,6 +9,11 @@
 variable "vm_name" {
   description = "Name of the virtual machine"
   type        = string
+
+    validation {
+    condition     = length(var.vm_name) <= 15
+    error_message = "The VM name must be less than or equal to 15 characters long."
+  }
 }
 
 variable "node_name" {
@@ -130,16 +135,10 @@ variable "gateway" {
 # User Credentials
 # ------------------------------------------------------------------------------
 
-variable "username" {
-  description = "Default username for the VM"
-  type        = string
-  default     = "Administrateur"
-}
-
 variable "password" {
   description = "Default password for the VM"
   type        = string
-  default     = "password"
+  default     = "Password123"
 
   validation {
     condition     = length(var.password) >= 7

@@ -1,3 +1,5 @@
+# This file demonstrates how to use the Terraform modules for creating VMs and networks.
+
 # Executing using the Terraform module for creating a Debian VM
 # module "vm_debian1" {
 #   source = "./modules/vm_debian"
@@ -28,10 +30,10 @@
 # }
 
 # Executing using the Terraform module for creating a Windows Server VM
-module "vm_windows_server" {
+module "vm_windows_server1" {
   source = "./modules/vm_windows_server"
   node_name = "SRV-PMX"
-  template_id = 9115
+  template_id = 9116
   vm_name = "Test-13"
   memory = 4096
   disk_size = 80
@@ -40,15 +42,15 @@ module "vm_windows_server" {
   ip_address = "172.16.0.13"
   netmask = 24
   gateway = "172.16.0.254"
-  username = "administrateur"
-  password = "Thomas300!"
+  password = "Password123!"
 }
 
-# # Executing using the Terraform module for creating a Windows Server VM
+
+# Executing using the Terraform module for creating a Windows Server VM
 module "vm_windows_server2" {
   source = "./modules/vm_windows_server"
   node_name = "SRV-PMX"
-  template_id = 9116
+  template_id = 9251
   vm_name = "Test-14"
   memory = 4096
   disk_size = 80
@@ -57,10 +59,8 @@ module "vm_windows_server2" {
   ip_address = "172.16.0.14"
   netmask = 24
   gateway = "172.16.0.254"
-  username = "administrateur"
-  password = "Thomas300!"
+  password = "Password123!"
 }
-
 
 # Executing using the Terraform module for creating a Debian LXC container
 # module "debian_container" {

@@ -39,7 +39,6 @@ module "windows_server_vm" {
   vlan_id    = 100
 
   # User credentials
-  username = "administrator"
   password = "secure-password"
 }
 ```
@@ -86,8 +85,7 @@ module "windows_server_vm" {
 | vlan_id | VLAN ID (0 for no VLAN) | `number` | `0` | no |
 | netmask | Network mask (CIDR notation) | `number` | `16` | no |
 | on_boot | Start VM automatically on boot | `bool` | `true` | no |
-| username | Default username for the VM | `string` | `"Administrateur"` | no |
-| password | Default password for the VM | `string` | `"password"` | no |
+| password | Default password for the VM | `string` | `"Password123"` | no |
 
 ## Outputs
 

@@ -59,7 +59,6 @@ resource "proxmox_virtual_environment_vm" "vm_windows_server" {
   initialization {
     # User account setup
     user_account {
-      username = var.username
       password = var.password
     }
 
