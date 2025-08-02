@@ -214,7 +214,7 @@
                 </SynchronousCommand>
                 <SynchronousCommand wcm:action="add">
                     <Order>5</Order>
-                    <CommandLine>powershell -ExecutionPolicy Bypass -File D:\enable-winrm.ps1</CommandLine>
+                    <CommandLine>powershell -ExecutionPolicy Bypass -File D:\Enable-WinRM.ps1</CommandLine>
                 </SynchronousCommand>
             </FirstLogonCommands>
             <OOBE>

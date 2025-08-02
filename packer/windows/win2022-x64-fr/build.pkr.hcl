@@ -455,6 +455,6 @@ build {
   sources = ["source.proxmox-iso.vm"]
 
   provisioner "powershell" {
-    script = "windows/win2022-x64-fr/provision/scripts/setup.ps1"
+    script = "windows/win2022-x64-fr/provision/scripts/Setup.ps1"
   }
 }

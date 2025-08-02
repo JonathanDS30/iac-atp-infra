@@ -1,29 +1,31 @@
-# WinRM configuration
+#  ---------------------------------------------------------------------------
+#  Enable-WinRM.ps1 – Enable WinRM for remote management
+#  ---------------------------------------------------------------------------
 
 Write-Output "Configuring WinRM..."
 
-# Activer WinRM si ce n'est pas déjà fait
+# Enable Remote Management 
 Enable-PSRemoting -Force
 winrm set winrm/config/service/auth '@{Basic="true"}'
 
-# Vérifier s'il y a déjà un listener HTTPS
+# Check if there is already an HTTPS listener
 $listeners = winrm enumerate winrm/config/listener
 
 if ($listeners -notmatch "Transport = HTTPS") {
     Write-Output "No HTTPS Listener found. Creating self-signed certificate and binding."
 
-    # Générer un certificat auto-signé pour le nom de la machine
+    # Generate a self-signed certificate for the machine name
     $cert = New-SelfSignedCertificate -DnsName $env:COMPUTERNAME `
         -CertStoreLocation "Cert:\LocalMachine\My" `
         -KeyLength 2048 `
         -NotAfter (Get-Date).AddYears(2) `
         -FriendlyName "WinRM HTTPS Self-Signed"
 
-    # Créer le listener HTTPS
+    # Create the HTTPS listener
     winrm create winrm/config/Listener?Address=*+Transport=HTTPS `
         "@{Hostname=`"$env:COMPUTERNAME`"; CertificateThumbprint=`"$($cert.Thumbprint)`"}"
 
-    # Ouvrir le port 5986 dans le pare-feu
+    # Open port 5986 in the firewall
     New-NetFirewallRule -Name "WinRM_HTTPS" -DisplayName "WinRM HTTPS" `
         -Protocol TCP -LocalPort 5986 -Direction Inbound -Action Allow -ErrorAction SilentlyContinue
 
@@ -32,7 +34,7 @@ if ($listeners -notmatch "Transport = HTTPS") {
     Write-Output "WinRM HTTPS listener already exists."
 }
 
-# Supprimer le listener HTTP s'il existe
+# Remove the HTTP listener if it exists
 $httpListener = winrm enumerate winrm/config/listener | Where-Object { $_ -match "Transport = HTTP" }
 if ($httpListener) {
     winrm delete winrm/config/Listener?Address=*+Transport=HTTP

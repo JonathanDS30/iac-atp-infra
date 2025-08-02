@@ -33,7 +33,7 @@
 module "vm_windows_server1" {
   source = "./modules/vm_windows_server"
   node_name = "SRV-PMX"
-  template_id = 9116
+  template_id = 9300
   vm_name = "Test-13"
   memory = 4096
   disk_size = 80
@@ -47,20 +47,20 @@ module "vm_windows_server1" {
 
 
 # Executing using the Terraform module for creating a Windows Server VM
-module "vm_windows_server2" {
-  source = "./modules/vm_windows_server"
-  node_name = "SRV-PMX"
-  template_id = 9251
-  vm_name = "Test-14"
-  memory = 4096
-  disk_size = 80
-  datastore_id = "local-lvm"
-  bridge = "vmbr1"
-  ip_address = "172.16.0.14"
-  netmask = 24
-  gateway = "172.16.0.254"
-  password = "Password123!"
-}
+# module "vm_windows_server2" {
+#   source = "./modules/vm_windows_server"
+#   node_name = "SRV-PMX"
+#   template_id = 9251
+#   vm_name = "Test-14"
+#   memory = 4096
+#   disk_size = 80
+#   datastore_id = "local-lvm"
+#   bridge = "vmbr1"
+#   ip_address = "172.16.0.14"
+#   netmask = 24
+#   gateway = "172.16.0.254"
+#   password = "Password123!"
+# }
 
 # Executing using the Terraform module for creating a Debian LXC container
 # module "debian_container" {
