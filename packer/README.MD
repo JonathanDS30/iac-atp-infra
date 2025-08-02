@@ -79,11 +79,19 @@ packer/
             ├── answer_files/
             │   └── autounattend.xml # Automated installation config
             ├── scripts/
-            │   ├── setup.ps1    # Main provisioning script
-            │   ├── sysprep.ps1  # System preparation script
-            │   └── postdeployment-enable-winrm.ps1
+            │   ├── Setup.ps1    # Main orchestration script
+            │   ├── Enable-WinRM.ps1 # WinRM enablement script
+            │   ├── postdeployment-enable-winrm.ps1
+            │   └── modules/     # Modular provisioning scripts
+            │       ├── Install-Notepad.ps1
+            │       ├── Install-CloudbaseInit.ps1
+            │       ├── Configure-Network.ps1
+            │       ├── Configure-RemoteDesktop.ps1
+            │       ├── Reset-AutoLogon.ps1
+            │       ├── Cleanup-Apps.ps1
+            │       └── Run-Sysprep.ps1
             └── tools/
-                └── cloudbase-init/ # Cloud-init configuration
+                └── cloudbase-init/ # Cloud-init configuration files
 ```
 
 ## Usage
@@ -139,11 +147,43 @@ The Debian 12 template includes:
 
 The Windows Server 2022 template includes:
 - **Automated Installation** - Autounattend.xml for unattended setup
-- **Cloudbase-Init Support** - Windows equivalent of cloud-init
-- **Essential Software** - Notepad++, Windows updates, and tools
+- **Modular Architecture** - Organized provisioning scripts for better maintainability
+- **Automated Software Downloads** - Dynamic download of Notepad++ and Cloudbase-Init from official sources
+- **Cloudbase-Init Support** - Windows equivalent of cloud-init with automatic configuration
+- **Network Configuration** - IPv6 disable, ICMPv4 enablement, and firewall rules
 - **Remote Management** - WinRM and Remote Desktop configuration
-- **System Optimization** - Performance and security optimizations
+- **System Optimization** - Application cleanup and performance optimizations
 - **Sysprep Preparation** - Proper generalization for template use
+
+#### Modular Script Architecture
+
+The Windows template uses a modular approach for better organization:
+
+**Main Orchestrator (`Setup.ps1`)**:
+- Central configuration management (software versions, paths)
+- Coordinated execution of all provisioning phases
+- Error handling and logging
+
+**Installation Modules**:
+- `Install-Notepad.ps1` - Downloads and installs Notepad++ from GitHub releases
+- `Install-CloudbaseInit.ps1` - Downloads Cloudbase-Init and applies custom configuration
+
+**Configuration Modules**:
+- `Configure-Network.ps1` - Network settings and firewall rules
+- `Configure-RemoteDesktop.ps1` - RDP configuration and access
+- `Reset-AutoLogon.ps1` - Fixes Sysprep autologon issues
+- `Cleanup-Apps.ps1` - Removes unnecessary applications
+
+**System Preparation**:
+- `Run-Sysprep.ps1` - Final system generalization for template use
+
+#### Automated Software Management
+
+Software installations are now fully automated:
+- **No pre-downloaded binaries** - All software downloaded during build
+- **Version-controlled** - Software versions defined in main script
+- **Source verification** - Downloads from official GitHub releases and websites
+- **Reduced repository size** - No binary files stored in version control
 
 ## Customization
 
@@ -181,13 +221,19 @@ vm_id       = 9001
 cores       = 4
 memory      = 4096
 disk_size   = "60G"
+
+# Software versions (configured in Setup.ps1)
+# - Notepad++: 8.8.3 (downloaded from GitHub releases)
+# - Cloudbase-Init: 1.1.6 (downloaded from GitHub releases)
 ```
 
 ## Best Practices
 
 ### Template Management
 - **Version Control** - Track template versions and changes
-- **Testing** - Always test templates before production use
+- **Modular Architecture** - Use modular scripts for better maintainability and testing
+- **Automated Downloads** - Prefer dynamic downloads over stored binaries
+- **Testing** - Test individual modules and full templates before production use
 - **Documentation** - Document any customizations made
 - **Security** - Use secure passwords and update regularly
 
@@ -217,11 +263,17 @@ Error: unable to create VM disk
 ```
 **Solution**: Check storage permissions and available space
 
-#### Network Timeouts
+#### Software Download Failures
 ```
-Error: timeout waiting for SSH/WinRM
+Error: Failed to download Notepad++: The remote server returned an error
 ```
-**Solution**: Verify network configuration and firewall rules
+**Solution**: Check internet connectivity and verify software version availability
+
+#### Module Execution Errors
+```
+Error: Install-Notepad.ps1 not found
+```
+**Solution**: Verify modular scripts are properly uploaded via provisioner or additional_cd_files
 
 ### Debug Mode
 
@@ -264,6 +316,9 @@ When contributing new templates or modifications:
 
 - Templates are optimized for Proxmox VE environments
 - Windows templates require additional storage permissions
+- **Modular architecture** allows for easy customization and testing of individual components
+- **Automated downloads** reduce repository size but require internet connectivity during build
 - Build times vary based on system resources and network speed
 - Consider using local ISO caching for improved build performance
 - Templates include QEMU Guest Agent for enhanced VM management
+- Software versions are centrally managed in the main Setup.ps1 script
