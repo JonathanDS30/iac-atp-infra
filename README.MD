@@ -45,13 +45,58 @@ This repository contains the complete Infrastructure as Code (IaC) solution for 
 
 ### 🌐 Network Topology
 
-The infrastructure simulates multiple geographical locations with interconnected VPN tunnels, all hosted on a **single Proxmox VE hypervisor**:
+The infrastructure emulates a globally distributed enterprise (ATP) by simulating multiple geographic sites interconnected through **IPsec VPN tunnels**, all hosted on a **single Proxmox VE hypervisor**.  
+Each site is logically isolated via **VLANs and dedicated bridges**, offering realistic Layer 2/3 segmentation.
 
-- **London Headquarters** (172.23.0.0/16) - Primary datacenter and management hub
-- **Ponte Vedra Beach** (172.26.0.0/16) - ATP Americas operations
-- **Sydney** (172.29.0.0/16) - ATP International Pacific operations  
-- **Monaco** (172.24.0.0/16) - ATP Europe operations
-- **Cloud Datacenter** (10.1.0.0/16) - Hybrid cloud integration point
+The VPN architecture follows a **Hub-and-Spoke model**:
+
+- **London** acts as the **primary hub**, centralizing all traffic and services.
+    
+- **Monaco** serves as the **backup hub**, capable of assuming full operational responsibility in case of failure at London.
+    
+- Remote sites (Sydney, Ponte Vedra, Cloud Datacenter) operate as **spokes**, routing all inter-site communication through London or, if unavailable, through Monaco.
+
+#### 📍 Sites & Network Segments
+
+- 🏢 **London Headquarters**
+    
+    - **Server Network** (`172.22.0.0/16`)  
+        Hosts core services including:
+        
+        - Active Directory (AD) & DNS
+            
+        - Remote Desktop Services (RDS)
+            
+        - File Synchronization Server
+            
+        - Zabbix Server for global monitoring
+            
+    - **User LAN** (`172.23.0.0/16`)  
+        Local network for test clients, administrators, and internal users within the London site.
+        
+
+- 🇲🇨 **Monaco (Disaster Recovery Site)**
+    
+    - **Server Network** (`172.22.0.0/16` via VPN L2)  
+        Monaco replicates London’s **server subnet** via a **Level 2 (L2) VPN tunnel**, allowing:
+        
+        - Seamless IP continuity
+            
+        - Automatic failover without reconfiguring addressing
+            
+        - Standby instances of AD, DNS, and RDS for PRA testing
+            
+    - **User LAN** (`172.24.0.0/16`)  
+        Simulated local user environment within the Monaco site, with test clients and a monitoring proxy (Zabbix Proxy).
+    
+- 🌴 **Ponte Vedra Beach** (`172.26.0.0/16`)  
+    Represents **ATP Americas operations**. Contains test clients and a replica domain controller, interconnected to London via IPsec site-to-site VPN.
+    
+- 🌏 **Sydney** (`172.29.0.0/16`)  
+    Emulates the **ATP International Pacific** region. Includes clients and a monitoring proxy agent, connected to the global mesh via VPN.
+    
+- ☁️ **Cloud Datacenter** (`10.1.0.0/16`)  
+    Simulated external cloud provider hosting a file-sharing platform (NextCloud).
 
 ## 🛠️ Technology Stack
 
@@ -130,8 +175,6 @@ iac-atp-infra/
 | **Terraform** | ≥ 1.0.0 | Infrastructure orchestration |
 | **Ansible** | ≥ 2.9 | Configuration management |
 | **xorriso** | latest | ISO manipulation (Linux) |
-
-> **Important**: This project is designed to run on a **single Proxmox VE hypervisor** that simulates the entire multi-site ATP infrastructure through virtualization.
 
 ### Proxmox VE Setup
 
@@ -212,15 +255,12 @@ terraform apply
 - **Access Control**: Role-based access management
 - **Audit Logging**: Comprehensive security monitoring
 
-
 ## 👥 Team and Contacts
 
 - [Thomas GARCIA](https://github.com/Keods30)
 - [Thibaut MAURRAS](https://github.com/Foufou-exe)
 - [Jonathan DELLA SANTINA](https://github.com/JonathanDS30)
 - [Joyce Leaticia LAETITIA](https://github.com/JoyceLeaticia)
-
-This project is developed as part of the EPSI MSPR TPRE815 course, demonstrating advanced skills in Infrastructure Architecture, Virtualization Technologies, Infrastructure as Code, Network Security, and Cloud Technologies.
 
 ## 📚 Documentation
 
