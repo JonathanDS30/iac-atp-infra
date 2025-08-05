@@ -12,7 +12,6 @@
 [![Terraform](https://img.shields.io/badge/Terraform-1.1+-purple.svg)](https://www.terraform.io/)
 [![Ansible](https://img.shields.io/badge/Ansible-2.1+-red.svg)](https://www.ansible.com/)
 [![License](https://img.shields.io/badge/MIT-green.svg)](LICENSE)
-[![Status](https://img.shields.io/badge/Status-Active-success.svg)]()
 [![Contributors](https://img.shields.io/badge/Contributors-4-brightgreen.svg)]()
 [![Documentation](https://img.shields.io/badge/docs-available-brightgreen.svg)]()
 [![Status](https://img.shields.io/badge/Status-Development-blue.svg)]()
