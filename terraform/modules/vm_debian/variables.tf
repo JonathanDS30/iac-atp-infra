@@ -53,7 +53,7 @@ variable "type" {
   description = "VM type (e.g., qemu)"
   type        = string
   default     = "host"
-  
+
 }
 
 variable "memory" {
@@ -111,14 +111,8 @@ variable "vlan_id" {
 }
 
 variable "ip_address" {
-  description = "Static IP address"
+  description = "Static IP address CIDR notation"
   type        = string
-}
-
-variable "netmask" {
-  description = "Network mask (CIDR notation)"
-  type        = number
-  default     = 24
 }
 
 variable "gateway" {

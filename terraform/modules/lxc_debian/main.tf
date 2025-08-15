@@ -14,7 +14,7 @@ resource "proxmox_virtual_environment_container" "debian_container" {
   tags          = var.tags
   start_on_boot = var.start_on_boot
   template      = var.template
-  
+
   # Container-specific settings
   unprivileged = var.unprivileged
   protection   = var.protection
@@ -31,8 +31,8 @@ resource "proxmox_virtual_environment_container" "debian_container" {
   # CPU Configuration
   # ------------------------------------------------------------------------------
   cpu {
-    cores        = var.cores
-    units        = var.cpu_units
+    cores = var.cores
+    units = var.cpu_units
   }
 
   # ------------------------------------------------------------------------------
@@ -54,11 +54,11 @@ resource "proxmox_virtual_environment_container" "debian_container" {
   # Network Interface Configuration
   # ------------------------------------------------------------------------------
   network_interface {
-    name        = var.network_interface_name
-    bridge      = var.bridge
-    vlan_id     = var.vlan_id
-    firewall    = var.firewall
-    enabled     = var.network_enabled
+    name     = var.network_interface_name
+    bridge   = var.bridge
+    vlan_id  = var.vlan_id
+    firewall = var.firewall
+    enabled  = var.network_enabled
   }
 
 
@@ -89,7 +89,7 @@ resource "proxmox_virtual_environment_container" "debian_container" {
   # Additional Features
   # ------------------------------------------------------------------------------
 
-    features {
+  features {
     nesting = var.nesting
   }
 }

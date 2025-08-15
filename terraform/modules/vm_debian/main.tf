@@ -61,13 +61,13 @@ resource "proxmox_virtual_environment_vm" "vm_debian" {
     user_account {
       username = var.username
       password = var.password
-      keys = var.keys
+      keys     = var.keys
     }
 
     # Network configuration
     ip_config {
       ipv4 {
-        address = "${var.ip_address}/${var.netmask}"
+        address = var.ip_address
         gateway = var.gateway
       }
     }

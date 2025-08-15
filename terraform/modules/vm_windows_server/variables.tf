@@ -10,7 +10,7 @@ variable "vm_name" {
   description = "Name of the virtual machine"
   type        = string
 
-    validation {
+  validation {
     condition     = length(var.vm_name) <= 15
     error_message = "The VM name must be less than or equal to 15 characters long."
   }
@@ -58,7 +58,7 @@ variable "type" {
   description = "VM type (e.g., qemu)"
   type        = string
   default     = "host"
-  
+
 }
 
 variable "memory" {
@@ -116,19 +116,63 @@ variable "vlan_id" {
 }
 
 variable "ip_address" {
-  description = "Static IP address"
+  description = "Static IP address in CIDR notation (e.g., 192.168.1.100/24)"
   type        = string
-}
 
-variable "netmask" {
-  description = "Network mask (CIDR notation)"
-  type        = number
-  default     = 24
+  validation {
+    condition     = can(regex("^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$", var.ip_address))
+    error_message = "IP address must be in valid CIDR notation (e.g., 192.168.1.100/24)."
+  }
+
+  validation {
+    condition = alltrue([
+      for octet in split(".", split("/", var.ip_address)[0]) :
+      can(tonumber(octet)) && tonumber(octet) >= 0 && tonumber(octet) <= 255
+    ])
+    error_message = "Each IP address octet must be between 0 and 255."
+  }
+
+  validation {
+    condition = (
+      can(tonumber(split("/", var.ip_address)[1])) &&
+      tonumber(split("/", var.ip_address)[1]) >= 1 &&
+      tonumber(split("/", var.ip_address)[1]) <= 32
+    )
+    error_message = "CIDR prefix must be between 1 and 32."
+  }
+
+  validation {
+    condition     = !startswith(var.ip_address, "0.")
+    error_message = "IP address cannot start with 0 (reserved network)."
+  }
+
+  validation {
+    condition     = !startswith(var.ip_address, "127.")
+    error_message = "IP address cannot be in the loopback range (127.0.0.0/8)."
+  }
 }
 
 variable "gateway" {
   description = "Default gateway IP address"
   type        = string
+
+  validation {
+    condition     = can(regex("^([0-9]{1,3}\\.){3}[0-9]{1,3}$", var.gateway))
+    error_message = "Gateway must be a valid IPv4 address (e.g., 192.168.1.1)."
+  }
+
+  validation {
+    condition = alltrue([
+      for octet in split(".", var.gateway) :
+      can(tonumber(octet)) && tonumber(octet) >= 0 && tonumber(octet) <= 255
+    ])
+    error_message = "Each gateway IP octet must be between 0 and 255."
+  }
+
+  validation {
+    condition     = !startswith(var.gateway, "0.")
+    error_message = "Gateway IP cannot start with 0 (reserved network)."
+  }
 }
 
 # ------------------------------------------------------------------------------

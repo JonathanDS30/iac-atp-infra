@@ -9,7 +9,7 @@
 variable "vm_id" {
   description = "Container identifier (VMID)"
   type        = number
-  default = null
+  default     = null
 }
 
 variable "node_name" {
@@ -112,7 +112,7 @@ variable "network_interface_name" {
 variable "bridge" {
   description = "Network bridge name"
   type        = string
-  default     = "vmbr1"
+  default     = "vmbr0"
 }
 
 variable "vlan_id" {
@@ -134,16 +134,89 @@ variable "network_enabled" {
 }
 
 variable "ip_address" {
-  description = "Static IP address in CIDR notation or 'dhcp' for automatic assignment"
+  description = "Static IP address in CIDR notation (e.g., 192.168.1.100/24) or 'dhcp' for automatic assignment"
   type        = string
   default     = "dhcp"
-}
 
+  validation {
+    condition = (
+      var.ip_address == "dhcp" ||
+      can(regex("^([0-9]{1,3}\\.){3}[0-9]{1,3}/[0-9]{1,2}$", var.ip_address))
+    )
+    error_message = "IP address must be 'dhcp' or in valid CIDR notation (e.g., 192.168.1.100/24)."
+  }
+
+  validation {
+    condition = (
+      var.ip_address == "dhcp" ||
+      alltrue([
+        for octet in split(".", split("/", var.ip_address)[0]) :
+        can(tonumber(octet)) && tonumber(octet) >= 0 && tonumber(octet) <= 255
+      ])
+    )
+    error_message = "Each IP address octet must be between 0 and 255."
+  }
+
+  validation {
+    condition = (
+      var.ip_address == "dhcp" ||
+      (
+        can(tonumber(split("/", var.ip_address)[1])) &&
+        tonumber(split("/", var.ip_address)[1]) >= 1 &&
+        tonumber(split("/", var.ip_address)[1]) <= 32
+      )
+    )
+    error_message = "CIDR prefix must be between 1 and 32."
+  }
+
+  validation {
+    condition = (
+      var.ip_address == "dhcp" ||
+      !startswith(var.ip_address, "0.")
+    )
+    error_message = "IP address cannot start with 0 (reserved network)."
+  }
+
+  validation {
+    condition = (
+      var.ip_address == "dhcp" ||
+      !startswith(var.ip_address, "127.")
+    )
+    error_message = "IP address cannot be in the loopback range (127.0.0.0/8)."
+  }
+}
 
 variable "gateway" {
   description = "Default gateway IP address"
   type        = string
   default     = null
+
+  validation {
+    condition = (
+      var.gateway == null ||
+      can(regex("^([0-9]{1,3}\\.){3}[0-9]{1,3}$", var.gateway))
+    )
+    error_message = "Gateway must be null or a valid IPv4 address (e.g., 192.168.1.1)."
+  }
+
+  validation {
+    condition = (
+      var.gateway == null ||
+      alltrue([
+        for octet in split(".", var.gateway) :
+        can(tonumber(octet)) && tonumber(octet) >= 0 && tonumber(octet) <= 255
+      ])
+    )
+    error_message = "Each gateway IP octet must be between 0 and 255."
+  }
+
+  validation {
+    condition = (
+      var.gateway == null ||
+      !startswith(var.gateway, "0.")
+    )
+    error_message = "Gateway IP cannot start with 0 (reserved network)."
+  }
 }
 
 # ------------------------------------------------------------------------------

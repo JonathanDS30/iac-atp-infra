@@ -11,7 +11,7 @@ resource "proxmox_virtual_environment_vm" "vm_windows_server" {
   name        = var.vm_name
   node_name   = var.node_name
   description = var.description
-  tags = var.tags
+  tags        = var.tags
 
   # ------------------------------------------------------------------------------
   # Template Cloning
@@ -65,7 +65,7 @@ resource "proxmox_virtual_environment_vm" "vm_windows_server" {
     # Network configuration
     ip_config {
       ipv4 {
-        address = "${var.ip_address}/${var.netmask}"
+        address = var.ip_address
         gateway = var.gateway
       }
     }
