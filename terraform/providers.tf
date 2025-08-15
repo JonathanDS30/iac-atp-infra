@@ -19,11 +19,11 @@ variable "proxmox_api_token" {
 
 
 provider "proxmox" {
-  endpoint = var.proxmox_api_url       # ex : "https://192.168.1.253:8006/"
+  endpoint = var.proxmox_api_url # ex : "https://192.168.1.253:8006/"
 
-  api_token = var.proxmox_api_token  # ex : "root@pam"
+  api_token = var.proxmox_api_token # ex : "root@pam"
 
-  insecure = true                      # si certif autosigné
+  insecure = true # si certif autosigné
 
   ssh {
     agent = true
